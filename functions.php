@@ -1,65 +1,116 @@
 <?php
 
 
-    function endema_customize_register($wp_customize) {
-        // Slider ayarları sekmesi
-        $wp_customize->add_section('endema_slider_settings', array(
-            'title'    => __('Anasayfa Özelleştirme', 'endema'),
-            'priority' => 30,
-        ));
-    
-        // 5 slider için arka plan ve başlık ayarları
-        $slider_data = array(
-            '1️⃣ Slider 1' => array(
-                'title' => 'Excellence Integrıty Experıence',
-                'bg' => get_template_directory_uri() . '/img/assets/bg.jpg',
-            ),
-            '2️⃣ Slider 2' => array(
-                'title' => 'ABOUT US',
-                'bg' => get_template_directory_uri() . '/img/assets/bg/bg7.webp',
-            ),
-            '3️⃣ Slider 3' => array(
-                'title' => 'NEWBUILDS',
-                'bg' => get_template_directory_uri() . '/img/assets/bg/bg8.webp',
-            ),
-            '4️⃣ Slider 4' => array(
-                'title' => 'REFITS',
-                'bg' => get_template_directory_uri() . '/img/assets/refits.jpg',
-            ),
-            '5️⃣ Slider 5' => array(
-                'title' => 'CONTACT US',
-                'bg' => get_template_directory_uri() . '/img/assets/contactus.jpg',
-            ),
-        );
-    
-        // Her bir slider için arka plan ve başlık ayarlarını ekleyelim
-        foreach ($slider_data as $slider_key => $slider_values) {
+function endema_customize_register($wp_customize) {
+    // Slider ayarları sekmesi
+    $wp_customize->add_section('endema_slider_settings', array(
+        'title'    => __('Anasayfa Özelleştirme', 'endema'),
+        'priority' => 30,
+    ));
 
-            
-            // Başlık
-            $wp_customize->add_setting("{$slider_key}_title", array(
-                'default'   => $slider_values['title'],
+    // 5 slider için başlık, yazılar ve linkler
+    $slider_data = array(
+        '1️⃣ Slider 1' => array(
+            'title' => 'Excellence Integrıty Experıence',
+            'bg' => get_template_directory_uri() . '/img/assets/bg.jpg',
+            'data_hover' => 'More Endema',
+            'href' => 'https://endema.com.tr/about',
+            'button_text' => 'MORE',
+        ),
+        '2️⃣ Slider 2' => array(
+            'title' => 'ABOUT US',
+            'bg' => get_template_directory_uri() . '/img/assets/bg/bg7.webp',
+            'data_hover' => 'More About',
+            'href' => 'https://endema.com.tr/about',
+            'button_text' => 'MORE',
+        ),
+        '3️⃣ Slider 3' => array(
+            'title' => 'NEWBUILDS',
+            'bg' => get_template_directory_uri() . '/img/assets/bg/bg8.webp',
+            'data_hover' => 'More Newbuild',
+            'href' => 'https://endema.com.tr/newbuild',
+            'button_text' => 'MORE',
+        ),
+        '4️⃣ Slider 4' => array(
+            'title' => 'REFITS',
+            'bg' => get_template_directory_uri() . '/img/assets/refits.jpg',
+            'data_hover' => 'More Refits',
+            'href' => 'https://endema.com.tr/refit',
+            'button_text' => 'MORE',
+        ),
+        '5️⃣ Slider 5' => array(
+            'title' => 'CONTACT US',
+            'bg' => get_template_directory_uri() . '/img/assets/contactus.jpg',
+            'data_hover' => 'More Contact',
+            'href' => 'https://endema.com.tr/contact',
+            'button_text' => 'MORE',
+        ),
+    );
+
+    // Her bir slider için başlık, arka plan, buton yazısı ve link ayarları
+    foreach ($slider_data as $slider_key => $slider_values) {
+
+        // Başlık ayarı
+        $wp_customize->add_setting("{$slider_key}_title", array(
+            'default'   => $slider_values['title'],
+            'transport' => 'refresh',
+        ));
+        $wp_customize->add_control("{$slider_key}_title", array(
+            'label'    => __("{$slider_key} Başlık", 'endema'),
+            'section'  => 'endema_slider_settings',
+            'type'     => 'text',
+        ));
+
+                // button__label-hover yazısı ayarı
+            $wp_customize->add_setting("{$slider_key}_button_text", array(
+                'default'   => $slider_values['button_text'],
                 'transport' => 'refresh',
             ));
-            $wp_customize->add_control("{$slider_key}_title", array(
-                'label'    => __("{$slider_key} Başlığı", 'endema'),
+            $wp_customize->add_control("{$slider_key}_button_text", array(
+                'label'    => __("{$slider_key} Buton Yazı ", 'endema'),
                 'section'  => 'endema_slider_settings',
                 'type'     => 'text',
             ));
 
-            // Arka plan resmi
-            $wp_customize->add_setting("{$slider_key}_bg_image", array(
-                'default'   => $slider_values['bg'],
+            // data-hover ayarı
+            $wp_customize->add_setting("{$slider_key}_data_hover", array(
+                'default'   => $slider_values['data_hover'],
                 'transport' => 'refresh',
             ));
-            $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, "{$slider_key}_bg_image", array(
-                'label'    => __("{$slider_key} Arka Planı", 'endema'),
+            $wp_customize->add_control("{$slider_key}_data_hover", array(
+                'label'    => __("{$slider_key} Buton İkinci Yazı", 'endema'),
                 'section'  => 'endema_slider_settings',
-                'settings' => "{$slider_key}_bg_image",
-            )));
-            }
+                'type'     => 'text',
+            ));
+    
+            // href ayarı
+            $wp_customize->add_setting("{$slider_key}_href", array(
+                'default'   => $slider_values['href'],
+                'transport' => 'refresh',
+            ));
+            $wp_customize->add_control("{$slider_key}_href", array(
+                'label'    => __("{$slider_key} Buton Link", 'endema'),
+                'section'  => 'endema_slider_settings',
+                'type'     => 'url',
+            ));
+
+
+        // Arka plan resmi ayarı
+        $wp_customize->add_setting("{$slider_key}_bg_image", array(
+            'default'   => $slider_values['bg'],
+            'transport' => 'refresh',
+        ));
+        $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, "{$slider_key}_bg_image", array(
+            'label'    => __("{$slider_key} Arka Planı", 'endema'),
+            'section'  => 'endema_slider_settings',
+            'settings' => "{$slider_key}_bg_image",
+        )));
+
     }
-    add_action('customize_register', 'endema_customize_register');
+}
+add_action('customize_register', 'endema_customize_register');
+
+
     
 
 
