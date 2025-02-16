@@ -112,6 +112,10 @@ add_action('customize_register', 'endema_customize_register');
 // anasayfa
 
 
+
+
+
+
 // About Sayfası Özelleştirme
 function endema_about_customize_register($wp_customize) {
     // About sayfası ayarları sekmesi
@@ -229,8 +233,9 @@ function endema_about_customize_register($wp_customize) {
     }
 }
 add_action('customize_register', 'endema_about_customize_register');
+// About Sayfası Özelleştirme
 
-// dmin panelindeki menüler kısmını gizlemek için
+// admin panelindeki menüler kısmını gizlemek için
 function hide_customizer_sections() {
     ?>
     <style type="text/css">
@@ -241,7 +246,7 @@ function hide_customizer_sections() {
     <?php
 }
 add_action('customize_controls_print_styles', 'hide_customizer_sections');
-// dmin panelindeki menüler kısmını gizlemek için
+// admin panelindeki menüler kısmını gizlemek için
 
 // admin panelindeki özelleştirme kısmınındaki bazı yerleri gizlemek için
 function endema_customize_customizer($wp_customize) {
