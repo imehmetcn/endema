@@ -1,5 +1,12 @@
 <?php
 
+
+function endema_customize_scripts() {
+    wp_enqueue_script('customizer-title-link', get_template_directory_uri() . '/js/customizer-title-link.js', array('jquery'), '', true);
+}
+add_action('customize_controls_enqueue_scripts', 'endema_customize_scripts');
+
+
 // anasayfa
 function endema_customize_register($wp_customize) {
     // Slider ayarları sekmesi
@@ -113,7 +120,40 @@ add_action('customize_register', 'endema_customize_register');
 
 
 
+
 // About Sayfası Özelleştirme
+
+function endema_customize_autofocus() {
+    ?>
+    <script type="text/javascript">
+        (function($) {
+            wp.customize.bind('ready', function() {
+                // Şu anki sayfanın URL'sini kontrol et
+                var currentUrl = window.location.href;
+
+                // Sadece 'about' sayfasına gidildiğinde sekmeyi aç
+                if (currentUrl.indexOf('/wp-admin/customize.php?url=https://endema.com.tr/about/') !== -1) {
+                    wp.customize.section('endema_about_settings').expand(); // Sekmeyi otomatik aç
+                }
+            });
+        })(jQuery);
+    </script>
+    <?php  
+}
+add_action('customize_controls_print_footer_scripts', 'endema_customize_autofocus');
+
+
+function endema_customizer_js_vars() {
+    ?>
+    <script type="text/javascript">
+        var customizerTitleLink = {
+            aboutPage: "<?php echo home_url('/wp-admin/customize.php?url=https://endema.com.tr/about/'); ?>"
+        };
+    </script>
+    <?php
+}
+add_action('customize_controls_print_footer_scripts', 'endema_customizer_js_vars');
+
 function endema_about_customize_register($wp_customize) {
     // About sayfası ayarları sekmesi
     $wp_customize->add_section('endema_about_settings', array(
@@ -242,6 +282,18 @@ function endema_about_customize_register($wp_customize) {
     }
 }
 add_action('customize_register', 'endema_about_customize_register');
+// About Sayfası Özelleştirme
+
+
+
+
+
+
+
+
+
+
+
 
 
 
