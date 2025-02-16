@@ -1,25 +1,31 @@
 <?php
 
 
+function endema_add_custom_capability() {
+    // "edit_endema_settings" adında özel bir yetki oluştur
+    $role = get_role('editor'); // Editör rolünü al
+    $role->add_cap('edit_endema_settings'); // Özel yetki ekle
+}
+add_action('admin_init', 'endema_add_custom_capability');
 
 function endema_add_admin_menu() {
     // Ana menü öğesini ekle
     add_menu_page(
-        'Endema Ayarları', // Sayfa başlığı
-        'Endema Ayarları', // Menü başlığı
-        'manage_options',  // Yetki seviyesi
+        'Anasayfa Ayarları', // Sayfa başlığı
+        'Anasayfa Ayarları', // Menü başlığı
+        'edit_endema_settings', // Özel yetki
         'endema-settings', // Menü slug'ı
         'endema_settings_page', // Callback fonksiyonu
-        'dashicons-admin-settings', // İkon (opsiyonel)
-        6 // Menü sırası (opsiyonel)
+        'dashicons-admin-settings', // İkon
+        6 // Menü sırası
     );
 
     // Alt menü öğesi eklemek isterseniz:
     add_submenu_page(
         'endema-settings', // Ana menü slug'ı
-        'Alt Ayarlar', // Sayfa başlığı
-        'Alt Ayarlar', // Menü başlığı
-        'manage_options', // Yetki seviyesi
+        'About Ayarları', // Sayfa başlığı
+        'About Ayarları', // Menü başlığı
+        'edit_endema_settings', // Özel yetki
         'endema-sub-settings', // Alt menü slug'ı
         'endema_sub_settings_page' // Callback fonksiyonu
     );
@@ -30,23 +36,37 @@ add_action('admin_menu', 'endema_add_admin_menu');
 function endema_settings_page() {
     ?>
     <div class="wrap">
-        <h1>Endema Ayarları</h1>
-        <p>Bu sayfa Endema ile ilgili özel ayarları yönetmek için kullanılır.</p>
-        <!-- Buraya ayar formları veya diğer içerikler eklenebilir -->
+        <h1>Endema Özelleştirme</h1>
+        <p>Bu sayfa panel ayarları nasıl kullanacağınızı gösterir.</p>
     </div>
     <?php
 }
 
-// Alt menü sayfası içeriği
-function endema_sub_settings_page() {
+
+// JavaScript ile menü başlıklarına link ekleme
+function endema_add_menu_links_script() {
     ?>
-    <div class="wrap">
-        <h1>Alt Ayarlar</h1>
-        <p>Bu sayfa Endema alt ayarlarını yönetmek için kullanılır.</p>
-        <!-- Buraya alt ayar formları veya diğer içerikler eklenebilir -->
-    </div>
+    <script type="text/javascript">
+        (function($) {
+            $(document).ready(function() {
+                // "Endema Ayarları" menü başlığına link ekle
+                var endemaMenu = $('#toplevel_page_endema-settings li a[href*="endema-settings"]');
+                if (endemaMenu.length) {
+                    endemaMenu.attr('href', 'https://endema.com.tr/wp-admin/customize.php?url=https://endema.com.tr/').attr('target', '_blank');
+
+                }
+
+                // "Alt Ayarlar" menü başlığına link ekle
+                var altMenu = $('#toplevel_page_endema-settings li a[href*="endema-sub-settings"]');
+                if (altMenu.length) {
+                    altMenu.attr('href', 'https://endema.com.tr/wp-admin/customize.php?url=https://endema.com.tr/about/').attr('target', '_blank');
+                }
+            });
+        })(jQuery);
+    </script>
     <?php
 }
+add_action('admin_footer', 'endema_add_menu_links_script');
 
 
 function endema_customize_scripts() {
