@@ -1,6 +1,54 @@
 <?php
 
 
+
+function endema_add_admin_menu() {
+    // Ana menü öğesini ekle
+    add_menu_page(
+        'Endema Ayarları', // Sayfa başlığı
+        'Endema Ayarları', // Menü başlığı
+        'manage_options',  // Yetki seviyesi
+        'endema-settings', // Menü slug'ı
+        'endema_settings_page', // Callback fonksiyonu
+        'dashicons-admin-settings', // İkon (opsiyonel)
+        6 // Menü sırası (opsiyonel)
+    );
+
+    // Alt menü öğesi eklemek isterseniz:
+    add_submenu_page(
+        'endema-settings', // Ana menü slug'ı
+        'Alt Ayarlar', // Sayfa başlığı
+        'Alt Ayarlar', // Menü başlığı
+        'manage_options', // Yetki seviyesi
+        'endema-sub-settings', // Alt menü slug'ı
+        'endema_sub_settings_page' // Callback fonksiyonu
+    );
+}
+add_action('admin_menu', 'endema_add_admin_menu');
+
+// Ana menü sayfası içeriği
+function endema_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Endema Ayarları</h1>
+        <p>Bu sayfa Endema ile ilgili özel ayarları yönetmek için kullanılır.</p>
+        <!-- Buraya ayar formları veya diğer içerikler eklenebilir -->
+    </div>
+    <?php
+}
+
+// Alt menü sayfası içeriği
+function endema_sub_settings_page() {
+    ?>
+    <div class="wrap">
+        <h1>Alt Ayarlar</h1>
+        <p>Bu sayfa Endema alt ayarlarını yönetmek için kullanılır.</p>
+        <!-- Buraya alt ayar formları veya diğer içerikler eklenebilir -->
+    </div>
+    <?php
+}
+
+
 function endema_customize_scripts() {
     wp_enqueue_script('customizer-title-link', get_template_directory_uri() . '/js/customizer-title-link.js', array('jquery'), '', true);
 }
