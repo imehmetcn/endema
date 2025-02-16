@@ -113,9 +113,6 @@ add_action('customize_register', 'endema_customize_register');
 
 
 
-
-
-
 // About Sayfası Özelleştirme
 function endema_about_customize_register($wp_customize) {
     // About sayfası ayarları sekmesi
@@ -130,21 +127,24 @@ function endema_about_customize_register($wp_customize) {
             'title' => 'ABOUT US',
             'bg' => get_template_directory_uri() . '/img/assets/bg/bg7.webp',
             'button_text' => 'Discover More',
-            'button_link' => 'https://endema.com.tr/about',
+        ),
+        'about_önizleme' => array(
+            'button_text' => 'Önizleme Sayfasını Aç',
+            'button_link' => admin_url('customize.php?autofocus[section]=endema_about_settings'),
         ),
         'about_section_1' => array(
             'title' => 'Endema Shipyard',
-            'content' => 'Endema Shipyard, a dynamic and rapidly growing Turkish yacht builder with a well-earned reputation for excellence in yacht construction. Located in the Antalya Free Zone, our shipyard boasts a 1,500 sqm closed shed, alongside state-of-the-art launching and lifting facilities. Over the past decade, we have refined our expertise in building aluminum, steel and composite yachts, a craft honed by the superior workmanship of our dedicated team.',
+            'content' => 'Endema Shipyard, a dynamic and rapidly growing Turkish yacht builder...',
             'image' => get_template_directory_uri() . '/img/assets/about/aboutus.webp',
         ),
         'about_section_2' => array(
             'title' => 'Our Expertise',
-            'content' => 'Our team of experienced engineers and highly skilled workers collaborates closely to deliver yachts that are not only visually stunning but also exceptionally functional and seaworthy. At Endema Shipyard, we take immense pride in offering bespoke yacht solutions, combining cutting-edge technology with traditional craftsmanship. Each yacht is custom-designed to meet the unique demands of our clients, all while maintaining the highest quality standards. From the outset, our focus has been on steel and aluminum construction, driven by a commitment to perfection in every detail, a meticulous approach to every stage, and a profound dedication to each project. This dedication extends beyond our shipyard walls, as we are proud to be recognized as one of the most reliable companies by our employees, clients, and the industry at large.',
+            'content' => 'Our team of experienced engineers and highly skilled workers...',
             'image' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/13.jpg',
         ),
         'about_section_3' => array(
             'title' => 'Refit & Services',
-            'content' => 'In addition to our expertise in yacht building, our refit line and extensive service network throughout the Mediterranean ensure that our clients receive comprehensive maintenance and support wherever they sail. This network allows us to provide fast, reliable, and professional services to meet our customers’ needs. As an experienced and ambitious shipyard, we are committed to expanding our capabilities and continuously pushing the boundaries of yacht construction. We welcome opportunities for future collaborations and invite you to explore how Endema Shipyard can bring your vision to life',
+            'content' => 'In addition to our expertise in yacht building, our refit line...',
             'image_1' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/14.jpg',
             'image_2' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/17.jpg',
             'image_3' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/16.jpg',
@@ -155,10 +155,25 @@ function endema_about_customize_register($wp_customize) {
 
     // Her bir bölüm için başlık, içerik ve resim ayarları
     foreach ($about_data as $section_key => $section_values) {
-
+        
+        // Özel Önizleme Butonu Ayarı
+        if ($section_key === 'about_önizleme') {
+            $wp_customize->add_setting("{$section_key}_button_text", array(
+                'default'   => $section_values['button_text'],
+                'transport' => 'refresh',
+            ));
+            $wp_customize->add_control(new WP_Customize_Control($wp_customize, "{$section_key}_button_text", array(
+                'label'    => __('Önizleme', 'endema'),
+                'section'  => 'endema_about_settings',
+                'type'     => 'hidden',
+                'description' => '<a href="' . esc_url($section_values['button_link']) . '" target="_blank" class="button button-primary">' . esc_html($section_values['button_text']) . '</a>',
+            )));
+            continue;
+        }
+        
         // Başlık ayarı
         $wp_customize->add_setting("{$section_key}_title", array(
-            'default'   => $section_values['title'],
+            'default'   => $section_values['title'] ?? '',
             'transport' => 'refresh',
         ));
         $wp_customize->add_control("{$section_key}_title", array(
@@ -166,7 +181,7 @@ function endema_about_customize_register($wp_customize) {
             'section'  => 'endema_about_settings',
             'type'     => 'text',
         ));
-
+        
         // İçerik ayarı
         if (isset($section_values['content'])) {
             $wp_customize->add_setting("{$section_key}_content", array(
@@ -196,6 +211,7 @@ function endema_about_customize_register($wp_customize) {
         // Çoklu resim ayarı (slider için)
         if (isset($section_values['image_1'])) {
             for ($i = 1; $i <= 5; $i++) {
+                if (!isset($section_values["image_{$i}"])) continue;
                 $wp_customize->add_setting("{$section_key}_image_{$i}", array(
                     'default'   => $section_values["image_{$i}"],
                     'transport' => 'refresh',
@@ -208,7 +224,7 @@ function endema_about_customize_register($wp_customize) {
             }
         }
 
-        // Buton yazısı ve link ayarı (sadece masthead için)
+        // Buton 
         if (isset($section_values['button_text'])) {
             $wp_customize->add_setting("{$section_key}_button_text", array(
                 'default'   => $section_values['button_text'],
@@ -219,21 +235,21 @@ function endema_about_customize_register($wp_customize) {
                 'section'  => 'endema_about_settings',
                 'type'     => 'text',
             ));
-
-            $wp_customize->add_setting("{$section_key}_button_link", array(
-                'default'   => $section_values['button_link'],
-                'transport' => 'refresh',
-            ));
-            $wp_customize->add_control("{$section_key}_button_link", array(
-                'label'    => __("{$section_key} Buton Link", 'endema'),
-                'section'  => 'endema_about_settings',
-                'type'     => 'url',
-            ));
         }
     }
 }
 add_action('customize_register', 'endema_about_customize_register');
-// About Sayfası Özelleştirme
+
+
+
+
+
+
+
+
+
+
+
 
 // admin panelindeki menüler kısmını gizlemek için
 function hide_customizer_sections() {
