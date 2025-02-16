@@ -120,26 +120,50 @@ function endema_about_customize_register($wp_customize) {
         'priority' => 35,
     ));
 
-    // About sayfası için yazılar ve resimler
+    // About sayfası için başlık, yazılar ve resimler
     $about_data = array(
+        'about_masthead' => array(
+            'title' => 'ABOUT US',
+            'bg' => get_template_directory_uri() . '/img/assets/bg/bg7.webp',
+            'button_text' => 'Discover More',
+            'button_link' => 'https://endema.com.tr/about',
+        ),
         'about_section_1' => array(
-            'content' => 'Endema Shipyard, a dynamic and rapidly growing Turkish yacht builder with a well-earned reputation for excellence in yacht construction...',
+            'title' => 'Endema Shipyard',
+            'content' => 'Endema Shipyard, a dynamic and rapidly growing Turkish yacht builder with a well-earned reputation for excellence in yacht construction. Located in the Antalya Free Zone, our shipyard boasts a 1,500 sqm closed shed, alongside state-of-the-art launching and lifting facilities. Over the past decade, we have refined our expertise in building aluminum, steel and composite yachts, a craft honed by the superior workmanship of our dedicated team.',
             'image' => get_template_directory_uri() . '/img/assets/about/aboutus.webp',
         ),
         'about_section_2' => array(
-            'content' => 'Our team of experienced engineers and highly skilled workers collaborates closely to deliver yachts that are not only visually stunning but also exceptionally functional and seaworthy...',
+            'title' => 'Our Expertise',
+            'content' => 'Our team of experienced engineers and highly skilled workers collaborates closely to deliver yachts that are not only visually stunning but also exceptionally functional and seaworthy. At Endema Shipyard, we take immense pride in offering bespoke yacht solutions, combining cutting-edge technology with traditional craftsmanship. Each yacht is custom-designed to meet the unique demands of our clients, all while maintaining the highest quality standards. From the outset, our focus has been on steel and aluminum construction, driven by a commitment to perfection in every detail, a meticulous approach to every stage, and a profound dedication to each project. This dedication extends beyond our shipyard walls, as we are proud to be recognized as one of the most reliable companies by our employees, clients, and the industry at large.',
             'image' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/13.jpg',
         ),
         'about_section_3' => array(
-            'content' => 'In addition to our expertise in yacht building, our refit line and extensive service network throughout the Mediterranean ensure that our clients receive comprehensive maintenance and support...',
-            'image' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/14.jpg',
+            'title' => 'Refit & Services',
+            'content' => 'In addition to our expertise in yacht building, our refit line and extensive service network throughout the Mediterranean ensure that our clients receive comprehensive maintenance and support wherever they sail. This network allows us to provide fast, reliable, and professional services to meet our customers’ needs. As an experienced and ambitious shipyard, we are committed to expanding our capabilities and continuously pushing the boundaries of yacht construction. We welcome opportunities for future collaborations and invite you to explore how Endema Shipyard can bring your vision to life',
+            'image_1' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/14.jpg',
+            'image_2' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/17.jpg',
+            'image_3' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/16.jpg',
+            'image_4' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/11.jpg',
+            'image_5' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/10.jpg',
         ),
     );
 
-    // Her bir bölüm için içerik ve resim ayarları
+    // Her bir bölüm için başlık, içerik ve resim ayarları
     foreach ($about_data as $section_key => $section_values) {
 
-           // İçerik ayarı
+        // Başlık ayarı
+        $wp_customize->add_setting("{$section_key}_title", array(
+            'default'   => $section_values['title'],
+            'transport' => 'refresh',
+        ));
+        $wp_customize->add_control("{$section_key}_title", array(
+            'label'    => __("{$section_key} Başlık", 'endema'),
+            'section'  => 'endema_about_settings',
+            'type'     => 'text',
+        ));
+
+        // İçerik ayarı
         if (isset($section_values['content'])) {
             $wp_customize->add_setting("{$section_key}_content", array(
                 'default'   => $section_values['content'],
@@ -152,7 +176,7 @@ function endema_about_customize_register($wp_customize) {
             ));
         }
 
-        // Resim ayarı
+        // Resim ayarı (tek resim)
         if (isset($section_values['image'])) {
             $wp_customize->add_setting("{$section_key}_image", array(
                 'default'   => $section_values['image'],
@@ -165,6 +189,43 @@ function endema_about_customize_register($wp_customize) {
             )));
         }
 
+        // Çoklu resim ayarı (slider için)
+        if (isset($section_values['image_1'])) {
+            for ($i = 1; $i <= 5; $i++) {
+                $wp_customize->add_setting("{$section_key}_image_{$i}", array(
+                    'default'   => $section_values["image_{$i}"],
+                    'transport' => 'refresh',
+                ));
+                $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, "{$section_key}_image_{$i}", array(
+                    'label'    => __("{$section_key} Resim {$i}", 'endema'),
+                    'section'  => 'endema_about_settings',
+                    'settings' => "{$section_key}_image_{$i}",
+                )));
+            }
+        }
+
+        // Buton yazısı ve link ayarı (sadece masthead için)
+        if (isset($section_values['button_text'])) {
+            $wp_customize->add_setting("{$section_key}_button_text", array(
+                'default'   => $section_values['button_text'],
+                'transport' => 'refresh',
+            ));
+            $wp_customize->add_control("{$section_key}_button_text", array(
+                'label'    => __("{$section_key} Buton Yazısı", 'endema'),
+                'section'  => 'endema_about_settings',
+                'type'     => 'text',
+            ));
+
+            $wp_customize->add_setting("{$section_key}_button_link", array(
+                'default'   => $section_values['button_link'],
+                'transport' => 'refresh',
+            ));
+            $wp_customize->add_control("{$section_key}_button_link", array(
+                'label'    => __("{$section_key} Buton Link", 'endema'),
+                'section'  => 'endema_about_settings',
+                'type'     => 'url',
+            ));
+        }
     }
 }
 add_action('customize_register', 'endema_about_customize_register');
