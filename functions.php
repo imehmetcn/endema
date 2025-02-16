@@ -119,7 +119,10 @@ function endema_about_customize_register($wp_customize) {
     $wp_customize->add_section('endema_about_settings', array(
         'title'    => __('About Sayfası Özelleştirme', 'endema'),
         'priority' => 35,
+        'description' => __('About sayfasını görmek için <a href="' . home_url('/about/') . '" target="_blank">buraya tıklayın</a>.', 'endema'),
     ));
+
+    
 
     // About sayfası için başlık, yazılar ve resimler
     $about_data = array(
@@ -130,7 +133,7 @@ function endema_about_customize_register($wp_customize) {
         ),
         'about_önizleme' => array(
             'button_text' => 'Önizleme Sayfasını Aç',
-            'button_link' => admin_url('customize.php?autofocus[section]=endema_about_settings'),
+            'button_link' => admin_url('/customize.php?url=https://endema.com.tr/about/'),
         ),
         'about_section_1' => array(
             'title' => 'Endema Shipyard',
@@ -239,13 +242,6 @@ function endema_about_customize_register($wp_customize) {
     }
 }
 add_action('customize_register', 'endema_about_customize_register');
-
-
-
-
-
-
-
 
 
 
