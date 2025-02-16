@@ -230,7 +230,39 @@ function endema_about_customize_register($wp_customize) {
 }
 add_action('customize_register', 'endema_about_customize_register');
 
+// dmin panelindeki menüler kısmını gizlemek için
+function hide_customizer_sections() {
+    ?>
+    <style type="text/css">
+        #accordion-panel-nav_menus {
+            display: none !important;
+        }
+    </style>
+    <?php
+}
+add_action('customize_controls_print_styles', 'hide_customizer_sections');
+// dmin panelindeki menüler kısmını gizlemek için
 
+// admin panelindeki özelleştirme kısmınındaki bazı yerleri gizlemek için
+function endema_customize_customizer($wp_customize) {
+
+    // Site Kimliği bölümünü
+    $wp_customize->remove_section('title_tagline');
+
+    // Giriş Sayfası 
+    $wp_customize->remove_section('static_front_page');
+
+    // Ek CSS bölümünü 
+    $wp_customize->remove_section('custom_css');
+
+    // İsim değiştirme örnek
+    // $wp_customize->get_section('title_tagline')->title = __('Yeni Site Kimliği', 'endema');
+    // $wp_customize->get_section('nav')->title = __('Yeni Menüler', 'endema');
+    // $wp_customize->get_section('static_front_page')->title = __('Yeni Giriş Sayfası Ayarları', 'endema');
+    // $wp_customize->get_section('custom_css')->title = __('Yeni Ek CSS', 'endema');
+}
+add_action('customize_register', 'endema_customize_customizer', 9999);
+// admin panelindeki özelleştirme kısmınındaki bazı yerleri gizlemek için
 
 function remove_classic_theme_inline_styles() {
     // WordPress tarafından eklenen klasik tema ve blok stillerini kaldır
