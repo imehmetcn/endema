@@ -1,6 +1,6 @@
 <?php
 
-
+// anasayfa
 function endema_customize_register($wp_customize) {
     // Slider ayarları sekmesi
     $wp_customize->add_section('endema_slider_settings', array(
@@ -109,10 +109,65 @@ function endema_customize_register($wp_customize) {
     }
 }
 add_action('customize_register', 'endema_customize_register');
+// anasayfa
 
 
-    
+// About Sayfası Özelleştirme
+function endema_about_customize_register($wp_customize) {
+    // About sayfası ayarları sekmesi
+    $wp_customize->add_section('endema_about_settings', array(
+        'title'    => __('About Sayfası Özelleştirme', 'endema'),
+        'priority' => 35,
+    ));
 
+    // About sayfası için yazılar ve resimler
+    $about_data = array(
+        'about_section_1' => array(
+            'content' => 'Endema Shipyard, a dynamic and rapidly growing Turkish yacht builder with a well-earned reputation for excellence in yacht construction...',
+            'image' => get_template_directory_uri() . '/img/assets/about/aboutus.webp',
+        ),
+        'about_section_2' => array(
+            'content' => 'Our team of experienced engineers and highly skilled workers collaborates closely to deliver yachts that are not only visually stunning but also exceptionally functional and seaworthy...',
+            'image' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/13.jpg',
+        ),
+        'about_section_3' => array(
+            'content' => 'In addition to our expertise in yacht building, our refit line and extensive service network throughout the Mediterranean ensure that our clients receive comprehensive maintenance and support...',
+            'image' => get_template_directory_uri() . '/img/assets/steel-and-aliuminum/14.jpg',
+        ),
+    );
+
+    // Her bir bölüm için içerik ve resim ayarları
+    foreach ($about_data as $section_key => $section_values) {
+
+           // İçerik ayarı
+        if (isset($section_values['content'])) {
+            $wp_customize->add_setting("{$section_key}_content", array(
+                'default'   => $section_values['content'],
+                'transport' => 'refresh',
+            ));
+            $wp_customize->add_control("{$section_key}_content", array(
+                'label'    => __("{$section_key} İçerik", 'endema'),
+                'section'  => 'endema_about_settings',
+                'type'     => 'textarea',
+            ));
+        }
+
+        // Resim ayarı
+        if (isset($section_values['image'])) {
+            $wp_customize->add_setting("{$section_key}_image", array(
+                'default'   => $section_values['image'],
+                'transport' => 'refresh',
+            ));
+            $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize, "{$section_key}_image", array(
+                'label'    => __("{$section_key} Resim", 'endema'),
+                'section'  => 'endema_about_settings',
+                'settings' => "{$section_key}_image",
+            )));
+        }
+
+    }
+}
+add_action('customize_register', 'endema_about_customize_register');
 
 
 
